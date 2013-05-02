@@ -11,26 +11,104 @@
 #Covert it into the following formats:
 #JSON, XML, CSV, YAML
 
-Microsoft Windows [Version 6.2.9200]
-(c) 2012 Microsoft Corporation. All rights reserved.
+#Now we are going to convert a Hash to JSON
 
-C:\Users\Sedinirina>irb --simple-prompt
+#Microsoft Windows [Version 6.2.9200]
+#(c) 2012 Microsoft Corporation. All rights reserved.
+
+#C:\Users\Sedinirina>irb --simple-prompt
+
 >> require 'json'
-=> true
-<bu', Ford: 'Mustang', Ford: 'Taurus', Chevrolet: 'Cobalt'}
-=> {:Chevrolet=>"Cobalt", :Ford=>"Taurus"}
+#=> true
+>> hash = {:Chevrolet => ['Malibu','Cobalt'], :Ford => ['Mustang','Taurus']}
+#=> {:Chevrolet=>["Malibu", "Cobalt"], :Ford=>["Mustang", "Taurus"]}
 >> hash.to_json
-#=> "{\"Chevrolet\":\"Cobalt\",\"Ford\":\"Taurus\"}"
+#=> "{\"Chevrolet\":[\"Malibu\",\"Cobalt\"],\"Ford\":[\"Mustang\",\"Taurus\"]}"
 >> j hash
-{"Chevrolet":"Cobalt","Ford":"Taurus"}
+#{"Chevrolet":["Malibu","Cobalt"],"Ford":["Mustang","Taurus"]}
 #=> nil
 #>>
 
+#Now we are going to convert a Hash to XML
+
+#First in order to that hash to be converted to xml,
+#we should convert the hash to your required
+#format before converting it to xml.
+
+# C:\Users\Sedinirina>irb --simple-prompt
+>> hash = {:Chevrolet => ['Malibu','Cobalt'], :Ford => ['Mustang','Taurus']}
+#=> {:Chevrolet=>["Malibu", "Cobalt"], :Ford=>["Mustang", "Taurus"]}
+>> hash.each do |keys, values|
+?> end
+#=> {:Chevrolet=>["Malibu", "Cobalt"], :Ford=>["Mustang", "Taurus"]}
+>> require 'xmlsimple'
+#=> true
+>> require "active_support/core_ext"
+#=> true
+>> hash.to_xml
+#=> "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <Chevrolet type=\"arra
+#y\">\n    <Chevrolet>Malibu</Chevrolet>\n    <Chevrolet>Cobalt</Chevrolet>\n  </
+#Chevrolet>\n  <Ford type=\"array\">\n    <Ford>Mustang</Ford>\n    <Ford>Taurus<
+#/Ford>\n  </Ford>\n</hash>\n"
+#>>
+
+#Now we are going to convert aHash to CSV
 
 
+#C:\Users\Sedinirina>irb --simple-prompt
+>> require 'csv'
+#=> true
+>> hash1 = {'Chevrolet' => 'Malibu', 'Ford' => 'Mustang'}
+#=> {"Chevrolet"=>"Malibu", "Ford"=>"Mustang"}
+>> hash2 = {'Chevrolet' => 'Cobalt', 'Ford' => 'Taurus'}
+#=> {"Chevrolet"=>"Cobalt", "Ford"=>"Taurus"}
+>> hashes = [hash1, hash2]
+#=> [{"Chevrolet"=>"Malibu", "Ford"=>"Mustang"}, {"Chevrolet"=>"Cobalt", "Ford"=>
+#"Taurus"}]
+>> all_keys_as_array = %w{Chevrolet Ford}
+#=> ["Chevrolet", "Ford"]
+>> h = CSV::Row.new(all_keys_as_array,[],true)
+#=> #<CSV::Row "Chevrolet":nil "Ford":nil>
+>> t = CSV::Table.new([h])
+#=> #<CSV::Table mode:col_or_row row_count:1>
+>> hashes.each do |m|
+?> r = CSV::Row.new([],[],false)
+>> m.each do |k, v|
+?> r << {k => v}
+>> end
+>> t << r
+>> end
+#=> [{"Chevrolet"=>"Malibu", "Ford"=>"Mustang"}, {"Chevrolet"=>"Cobalt", "Ford"=>
+#"Taurus"}]
+>> puts t.to_csv
+#Chevrolet,Ford
+#Malibu,Mustang
+#Cobalt,Taurus
+#=> nil
+#>>
+
+#Now we are going to convert aHash to YAML
 
 
-
+#C:\Users\Sedinirina>irb --simple-prompt
+>> require 'yaml'
+#=> true
+>> hash = {}
+#=> {}
+>> hash[:Chevrolet] = "Malibu","Cobalt"
+#=> ["Malibu", "Cobalt"]
+>> hash[:Ford] = "Mustang","Taurus"
+#=> ["Mustang", "Taurus"]
+>> puts hash.to_yaml
+#---
+#:Chevrolet:
+#- Malibu
+#- Cobalt
+#:Ford:
+#- Mustang
+#- Taurus
+#=> nil
+#>>
 
 # b. Create a simple ruby class called “Book”. Create “getters and setters” that allow you to set the author name and ISBN number
 
